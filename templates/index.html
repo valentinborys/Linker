@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скорочувач посилань</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function openHistory() {
+            document.getElementById("historyModal").style.display = "block";
+        }
+
+        function closeHistory() {
+            document.getElementById("historyModal").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Скорочувач посилань</h1>
+        <form action="/shorten" method="POST">
+            <input type="url" name="url" placeholder="Введіть посилання" required>
+            <button type="submit">Скоротити</button>
+        </form>
+
+        {% if short_url %}
+            <div class="result">
+                <p>Ваше коротке посилання</p>
+                <a href="{{ short_url }}" target="_blank">{{ short_url }}</a>
+            </div>
+        {% endif %}
+
+        <button class="history-btn" onclick="openHistory()">Історія посилань</button>
+
+        <!-- Модальне вікно -->
+        <div id="historyModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeHistory()">&times;</span>
+                <h2>Історія посилань</h2>
+                <div class="history">
+                    {% if history %}
+                        <ul>
+                            {% for item in history %}
+                                <li>
+                                    Оригінальне посилання: <a href="{{ item.original }}" target="_blank">{{ item.original }}</a><br>
+                                    Коротке посилання: <a href="{{ item.short }}" target="_blank">{{ item.short }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Історія пуста.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
